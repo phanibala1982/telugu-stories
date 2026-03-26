@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telugu Story Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+        textarea { width: 100%; height: 100px; margin-bottom: 10px; }
+        button { padding: 10px 20px; background-color: #007BFF; color: white; border: none; cursor: pointer; }
+        #output { margin-top: 20px; padding: 15px; background-color: #f1f1f1; white-space: pre-wrap; min-height: 100px; }
+    </style>
+</head>
+<body>
+
+    <h2>తెలుగు కథల జనరేటర్</h2>
+    <p>Enter your characters and scenario in Telugu (or English):</p>
+    
+    <textarea id="promptInput" placeholder="ఉదాహరణకు: అన్న మరియు చెల్లి మధ్య కథ..."></textarea><br>
+    <button onclick="generateStory()">కథను సృష్టించండి (Generate)</button>
+
+    <div id="output">కథ ఇక్కడ కనిపిస్తుంది...</div>
+
+    <script>
+        // REPLACE THE URL BELOW WITH YOUR NGROK API URL FROM COLAB
+        const API_URL = "https://subvesicular-joaquin-globular.ngrok-free.dev/generate";
+
+        async function generateStory() {
+            const promptText = document.getElementById("promptInput").value;
+            const outputDiv = document.getElementById("output");
+            
+            if (!promptText) {
+                alert("Please enter a prompt.");
+                return;
+            }
+
+            outputDiv.innerHTML = "Generating explicit story, please wait... (It may take 1-2 minutes)";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt: promptText })
+                });
+
+                const data = await response.json();
+                outputDiv.innerHTML = data.story;
+            } catch (error) {
+                outputDiv.innerHTML = "Error: Could not connect to the server. Make sure your Colab notebook is running.";
+            }
+        }
+    </script>
+
+</body>
+</html>
